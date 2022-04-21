@@ -1,0 +1,30 @@
+FROM mcr.microsoft.com/azureml/minimal-ubuntu18.04-py37-cpu-inference:latest
+
+USER root:root
+
+# Install and update curl
+RUN apt-get update && \
+    apt-get install -y curl && \
+    apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install miniconda
+RUN curl -LO http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+RUN bash Miniconda3-latest-Linux-x86_64.sh -p /miniconda -b
+RUN rm Miniconda3-latest-Linux-x86_64.sh
+ENV PATH=/miniconda/bin:${PATH}
+RUN conda update -y conda
+COPY environment /var/environment
+RUN conda env update -n base -f /var/environment/conda.yml
+RUN conda init
+
+# Switch back to non-root user
+USER dockeruser
+
+# Code
+COPY code /var/azureml-app
+ENV AZUREML_ENTRY_SCRIPT=score.py
+
+# Model
+COPY model /var/azureml-app/azureml-models
+ENV AZUREML_MODEL_DIR=/var/azureml-app/azureml-models

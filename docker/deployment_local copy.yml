@@ -1,0 +1,15 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: deployment-name
+endpoint_name: endpoint-name
+model:
+  path: sklearn_regression_model.pkl
+code_configuration: 
+  code: "."
+  scoring_script: score.py
+environment:
+  image: condtainer_name.azurecr.io/docker-basic:latest
+  # build: 
+  #   dockerfile_path: Dockerfile
+  #   path: ./dock
+instance_type: Standard_F2s_v2
+instance_count: 1

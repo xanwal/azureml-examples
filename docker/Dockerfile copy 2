@@ -1,0 +1,25 @@
+FROM mcr.microsoft.com/azureml/minimal-ubuntu18.04-py37-cpu-inference:latest
+
+USER root:root
+
+# Install and update curl
+RUN apt-get update && \
+    apt-get install -y curl && \
+    apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
+
+
+
+COPY environment /var/environment
+RUN conda env update amlenv -f /var/environment/conda.yml
+
+# Switch back to non-root user
+USER dockeruser
+
+# Code
+COPY code /var/azureml-app
+ENV AZUREML_ENTRY_SCRIPT=score.py
+
+# Model
+COPY model /var/azureml-app/azureml-models
+ENV AZUREML_MODEL_DIR=/var/azureml-app/azureml-models
