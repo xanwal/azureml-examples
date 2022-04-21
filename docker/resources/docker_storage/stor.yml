@@ -1,0 +1,7 @@
+$schema: https://azuremlschemas.azureedge.net/latest/azureFile.schema.json
+name: file_example
+type: azure_file
+account_name: valwallacestorage
+file_share_name: endptshare
+credentials:
+  account_key: placeholder

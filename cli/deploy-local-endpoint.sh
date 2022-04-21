@@ -1,7 +1,7 @@
 set -e
 
 # <set_endpoint_name> 
-export ENDPOINT_NAME="<YOUR_ENDPOINT_NAME>"
+export ENDPOINT_NAME='basic_local_endpoint_sh'
 # </set_endpoint_name>
 
 export ENDPOINT_NAME=endpt-`echo $RANDOM`
