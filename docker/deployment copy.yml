@@ -1,0 +1,24 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: customcontainerdeployment
+endpoint_name: custom-container-9230
+model: 
+  name: customcontainermodel
+  version: 1
+  path: ./model/dummy
+environment:
+  #name: torchserve-environment
+  #version: 1
+  image: valwallaceskr.azurecr.io/custom_container:latest
+  inference_config:
+    liveness_route:
+      port: 5001
+      path: /
+    readiness_route:
+      port: 5001
+      path: /
+    scoring_route:
+      port: 5001
+      path: /score 
+instance_type: Standard_F2s_v2
+instance_count: 1
+    

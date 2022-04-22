@@ -1,0 +1,13 @@
+name: spacy
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - numpy
+  - pandas
+  - spacy
+  - cupy
+  - spacy-transformers
+  - pip 
+  - pip:
+     - spacy-lookups-data

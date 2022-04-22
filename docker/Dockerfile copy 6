@@ -1,0 +1,30 @@
+FROM ubuntu:18.04
+
+USER root:root
+
+RUN apt-get update && apt-get install -y curl
+
+RUN curl -LO http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+RUN bash Miniconda3-latest-Linux-x86_64.sh -p /miniconda -b
+RUN rm Miniconda3-latest-Linux-x86_64.sh
+ENV PATH=/miniconda/bin:${PATH}
+RUN conda update -y conda
+RUN conda init
+
+COPY environment /var/environment
+RUN conda env update -n base -f /var/environment/conda.yml
+
+RUN python -m pip install azureml-inference-server-http
+
+RUN useradd -MU dockeruser 
+USER dockeruser
+
+COPY code /var/custom_app
+ENV AZUREML_ENTRY_SCRIPT=score.py
+
+COPY model /var/custom_app/azureml-models
+ENV AZUREML_MODEL_DIR=/var/custom_app/azureml-models
+
+WORKDIR /var/custom_app
+
+ENTRYPOINT azmlinfsrv --entry_script $AZUREML_ENTRY_SCRIPT --model_dir $AZUREML_MODEL_DIR
