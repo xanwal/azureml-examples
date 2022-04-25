@@ -1,0 +1,4 @@
+tensorflow-gpu>=2.8, <2.9
+keras>= 2.8, <2.9
+pillow>= 9.1, <9.2
+keras-preprocessing>=1.1, <1.2

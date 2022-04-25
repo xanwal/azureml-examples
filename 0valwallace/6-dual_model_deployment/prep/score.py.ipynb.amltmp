@@ -1,0 +1,72 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\r\n",
+        "import tensorflow as tf\r\n",
+        "import tensorflow.keras as k\r\n",
+        "from PIL import Image\r\n",
+        "\r\n",
+        "def init():\r\n",
+        "    \"\"\"\r\n",
+        "    This function is called when the container is initialized/started, typically after create/update of the deployment.\r\n",
+        "    You can write the logic here to perform init operations like caching the model in memory\r\n",
+        "    \"\"\"\r\n",
+        "    global model\r\n",
+        "    \r\n",
+        "    # AZUREML_MODEL_DIR is an environment variable created during deployment.\r\n",
+        "    # It is the path to the model folder (./azureml-models/$MODEL_NAME/$VERSION)\r\n",
+        "    model_path = os.path.join(\r\n",
+        "        os.getenv(\"AZUREML_MODEL_DIR\"), \"horses\")\r\n",
+        "    # deserialize the model file back into a sklearn model\r\n",
+        "    model = joblib.load(model_path)\r\n",
+        "    logging.info(\"Init complete\")\r\n",
+        "\r\n",
+        "\r\n",
+        "def run(raw_data):\r\n",
+        "    \"\"\"\r\n",
+        "    This function is called for every invocation of the endpoint to perform the actual scoring/prediction.\r\n",
+        "    In the example we extract the data from the json input and call the scikit-learn model's predict()\r\n",
+        "    method and return the result back\r\n",
+        "    \"\"\"\r\n",
+        "    logging.info(\"Request received\")\r\n",
+        "    data = json.loads(raw_data)[\"data\"]\r\n",
+        "    data = numpy.array(data)\r\n",
+        "    result = model.predict(data)\r\n",
+        "    logging.info(\"Request processed\")\r\n",
+        "    return result.tolist()\r\n"
+      ],
+      "outputs": [],
+      "execution_count": null,
+      "metadata": {}
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python38-azureml",
+      "language": "python",
+      "display_name": "Python 3.8 - AzureML"
+    },
+    "language_info": {
+      "name": "python",
+      "version": "3.8.5",
+      "mimetype": "text/x-python",
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "pygments_lexer": "ipython3",
+      "nbconvert_exporter": "python",
+      "file_extension": ".py"
+    },
+    "kernel_info": {
+      "name": "python38-azureml"
+    },
+    "nteract": {
+      "version": "nteract-front-end@1.0.0"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
